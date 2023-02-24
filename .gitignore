@@ -1,0 +1,5 @@
+*.log
+.sync*
+profile*
+__pycache__
+*.sdf.gz
