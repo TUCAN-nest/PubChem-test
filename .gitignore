@@ -3,3 +3,4 @@
 profile*
 __pycache__
 *.sdf.gz
+testdata/
