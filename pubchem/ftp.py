@@ -31,7 +31,7 @@ class MD5:
         return self.hash_function.hexdigest()
 
 
-def fetch_gzipped_sdf_filenames(ftp_client: FTP) -> list[str]:
+def _fetch_gzipped_sdf_filenames(ftp_client: FTP) -> list[str]:
     """Fetch names of all gzipped SDF files from FTP server."""
     filenames = LineData()
     ftp_client.retrlines("LIST", filenames)
@@ -43,7 +43,7 @@ def fetch_gzipped_sdf_filenames(ftp_client: FTP) -> list[str]:
     ]
 
 
-def fetch_gzipped_sdf(
+def _fetch_gzipped_sdf(
     filename: str, destination_directory: str, ftp_client: FTP
 ) -> str:
     """Fetch gzipped SDF from FTP server.
@@ -66,7 +66,7 @@ def fetch_gzipped_sdf(
             print(exception)
             return ""
 
-    if md5.hash != fetch_gzipped_sdf_hash(filename, ftp_client):
+    if md5.hash != _fetch_gzipped_sdf_hash(filename, ftp_client):
         print(
             f"The hash of {filepath.as_posix()} doesn't match it's hash on the FTP server. Removing the file locally."
         )
@@ -76,7 +76,7 @@ def fetch_gzipped_sdf(
     return filepath.as_posix()
 
 
-def fetch_gzipped_sdf_hash(filename: str, ftp_client: FTP) -> str:
+def _fetch_gzipped_sdf_hash(filename: str, ftp_client: FTP) -> str:
     """Fetch MD5 hash from FTP server."""
     md5 = LineData()
     try:
@@ -88,15 +88,15 @@ def fetch_gzipped_sdf_hash(filename: str, ftp_client: FTP) -> str:
     return md5[0].split()[0].strip()
 
 
-def download_all_sdf_from_pubchem(destination_directory: str) -> Iterator[str]:
+def download_all_sdf(destination_directory: str) -> Iterator[str]:
     """Generator yielding file paths of successfully downloaded SDF."""
     with FTP("ftp.ncbi.nlm.nih.gov") as ftp_client:
         ftp_client.login()
         ftp_client.cwd("pubchem/Compound/CURRENT-Full/SDF/")
 
         # filename = "Compound_033500001_034000000.sdf.gz"  # Compound_033500001_034000000.sdf.gz good for prototyping since it's only 20M large
-        for filename in fetch_gzipped_sdf_filenames(ftp_client)[:3]:
-            if filepath := fetch_gzipped_sdf(
+        for filename in _fetch_gzipped_sdf_filenames(ftp_client)[:3]:
+            if filepath := _fetch_gzipped_sdf(
                 filename, destination_directory, ftp_client
             ):
                 yield filepath
