@@ -4,7 +4,7 @@
 
 ## Pipeline architecture
 
-![pipeline architecture](sdf_pipeline.svg)
+![pipeline architecture](pipeline.svg)
 
 
 ### Consumer API
