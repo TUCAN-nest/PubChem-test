@@ -44,11 +44,10 @@ def _consume_molfiles(
     molfile_queue: multiprocessing.Queue,
     result_queue: multiprocessing.Queue,
     consumer_function: Callable,
-    get_molfile_id: Callable,
     process_id: int,
 ):
     for molfile in iter(molfile_queue.get, "DONE"):
-        result_queue.put(consumer_function(molfile, get_molfile_id))
+        result_queue.put(consumer_function(molfile))
 
     result_queue.put(f"DONE")
 
@@ -59,7 +58,6 @@ def run(
     sdf_path: str,
     log_db: sqlite3.Connection,
     consumer_function: Callable,
-    get_molfile_id: Callable,
     number_of_consumer_processes: int,
 ):
     molfile_queue: multiprocessing.Queue = multiprocessing.Queue()  # TODO: limit size?
@@ -82,7 +80,6 @@ def run(
                 molfile_queue,
                 result_queue,
                 consumer_function,
-                get_molfile_id,
                 process_id,
             ),
         )

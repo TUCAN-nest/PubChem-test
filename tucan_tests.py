@@ -1,6 +1,7 @@
 import pipeline
 import sqlite3
 from typing import Callable
+from functools import partial
 from tucan.test_utils import permutation_invariance
 from tucan.io import graph_from_molfile_text
 from tucan.canonicalization import canonicalize_molecule
@@ -31,8 +32,9 @@ def invariance_driver(sdf_path: str, get_molfile_id: Callable, log_path: str):
         pipeline.run(
             sdf_path=sdf_path,
             log_db=log_db,
-            consumer_function=test_invariance_consumer,
-            get_molfile_id=get_molfile_id,
+            consumer_function=partial(
+                test_invariance_consumer, get_molfile_id=get_molfile_id
+            ),
             number_of_consumer_processes=8,
         )
 
@@ -72,8 +74,9 @@ def regression_driver(
         pipeline.run(
             sdf_path=sdf_path,
             log_db=log_db,
-            consumer_function=test_regression_consumer,
-            get_molfile_id=get_molfile_id,
+            consumer_function=partial(
+                test_regression_consumer, get_molfile_id=get_molfile_id
+            ),
             number_of_consumer_processes=8,
         )
 
@@ -106,7 +109,8 @@ def regression_reference_driver(
         pipeline.run(
             sdf_path=sdf_path,
             log_db=log_db,
-            consumer_function=test_regression_consumer,
-            get_molfile_id=get_molfile_id,
+            consumer_function=partial(
+                test_regression_consumer, get_molfile_id=get_molfile_id
+            ),
             number_of_consumer_processes=8,
         )
