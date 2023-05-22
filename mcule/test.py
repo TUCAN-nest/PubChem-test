@@ -1,7 +1,8 @@
 import re
 from argparse import ArgumentParser
 from typing import Final
-import tucan_tests
+import tucan_consumers
+from drivers import invariance_driver, regression_driver, regression_reference_driver
 
 """
 python -m mcule.test regression --result-destination path/to/log --compute-reference-results
@@ -10,7 +11,7 @@ python -m mcule.test invariance --result-destination path/to/log
 python -m mcule.test all --result-destination path/to/log --regression-reference
 """
 
-SDF_PATH: Final = "mcule/testdata/mcule_2000.sdf.gz"
+SDF_PATH: Final = "mcule/testdata/mcule_20000.sdf.gz"
 
 
 def _get_mcule_id(molfile: str) -> str:
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     result_destination_args = {
         "default": ":memory:",
         "metavar": "RESULT_DESTINATION",
-        "help": "Path to save the results.",
+        "help": "Path to save the results. If not specified, results will be saved in memory.",
     }
 
     regression_reference_args = {
@@ -55,26 +56,28 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    print(args)
 
     if args.test_type in ["invariance", "all"]:
-        tucan_tests.invariance_driver(
+        invariance_driver(
             sdf_path=SDF_PATH,
             log_path=args.result_destination,
+            consumer=tucan_consumers.test_invariance,
             get_molfile_id=_get_mcule_id,
         )
 
     if args.test_type in ["regression", "all"]:
         if args.compute_reference:
-            tucan_tests.regression_reference_driver(
+            regression_reference_driver(
                 sdf_path=SDF_PATH,
                 log_path=args.result_destination,
+                consumer=tucan_consumers.test_regression,
                 get_molfile_id=_get_mcule_id,
             )
         else:
-            tucan_tests.regression_driver(
+            regression_driver(
                 sdf_path=SDF_PATH,
                 log_path=args.result_destination,
                 reference_path=args.regression_reference,
+                consumer=tucan_consumers.test_regression,
                 get_molfile_id=_get_mcule_id,
             )
