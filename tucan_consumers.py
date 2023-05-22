@@ -14,7 +14,7 @@ def test_invariance(molfile: str, get_molfile_id: Callable):
         assertion = str(exception)
 
     return (
-        "regression",
+        "invariance",
         pipeline.get_current_time(),
         get_molfile_id(molfile),
         assertion,
