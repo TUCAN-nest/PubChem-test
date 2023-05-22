@@ -1,14 +1,6 @@
-# Test TUCAN against PubChem
+# TUCAN tests
 
 :warning: **This repository is not used for "official" testing yet. Prototyping only.** :warning:
-
-## Pipeline architecture
-
-![pipeline architecture](pipeline.svg)
-
-
-### Consumer API
-TODO: specify
 
 ## Notes
 [Tucan invariance tests](https://github.com/TUCAN-nest/TUCAN/blob/187a0d40c7ffca1855f7ad78f7a190d0e73e9b2c/tucan/test_utils.py#L9-L20) against 1 [PubChem SDF](https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/CURRENT-Full/SDF/) (containing 500,000 compounds),
