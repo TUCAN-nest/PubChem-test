@@ -1,6 +1,6 @@
 import tucan_consumers
 from pubchem.ftp import download_all_sdf
-from sdf_pipeline import cli, drivers
+from sdf_pipeline import drivers
 
 
 def _get_pubchem_id(molfile):
@@ -8,7 +8,7 @@ def _get_pubchem_id(molfile):
 
 
 if __name__ == "__main__":
-    args = cli.parse()
+    args = drivers.parse_cli_args()
 
     for sdf_path in download_all_sdf(destination_directory="testdata"):
         drivers.invariance(
